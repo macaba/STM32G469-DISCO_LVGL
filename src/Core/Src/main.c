@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "../Components/otm8009a/otm8009a.h"
@@ -59,10 +60,10 @@ QSPI_HandleTypeDef hqspi;
 
 SDRAM_HandleTypeDef hsdram1;
 
-/* Definitions for TouchGFXTask */
-osThreadId_t TouchGFXTaskHandle;
-const osThreadAttr_t TouchGFXTask_attributes = {
-  .name = "TouchGFXTask",
+/* Definitions for LVGLTask */
+osThreadId_t LVGLTaskHandle;
+const osThreadAttr_t LVGLTask_attributes = {
+  .name = "LVGLTask",
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 4096 * 4
 };
@@ -80,7 +81,7 @@ static void MX_FMC_Init(void);
 static void MX_LTDC_Init(void);
 static void MX_QUADSPI_Init(void);
 static void MX_I2C1_Init(void);
-void TouchGFX_Task(void *argument);
+void LVGL_Task(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -157,8 +158,8 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of TouchGFXTask */
-  TouchGFXTaskHandle = osThreadNew(TouchGFX_Task, NULL, &TouchGFXTask_attributes);
+  /* creation of LVGLTask */
+  LVGLTaskHandle = osThreadNew(LVGL_Task, NULL, &LVGLTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -717,14 +718,14 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_TouchGFX_Task */
+/* USER CODE BEGIN Header_LVGL_Task */
 /**
-  * @brief  Function implementing the TouchGFXTask thread.
+  * @brief  Function implementing the LVGLTask thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_TouchGFX_Task */
-__weak void TouchGFX_Task(void *argument)
+/* USER CODE END Header_LVGL_Task */
+__weak void LVGL_Task(void *argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
