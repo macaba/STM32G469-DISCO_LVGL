@@ -27,6 +27,8 @@
 #include "stm32469i_discovery_sdram.h"
 #include "stm32469i_discovery_qspi.h"
 #include "stm32469i_discovery_lcd.h"
+#include "lvgl.h"
+#include "stm32_lvgl.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -115,7 +117,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  lv_init();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -134,8 +136,22 @@ int main(void)
   BSP_LCD_LayerDefaultInit(0, 0xC0000000);
   BSP_LCD_SelectLayer(0);
   BSP_LCD_DisplayOn();
-  BSP_LCD_Clear(LCD_COLOR_WHITE);
-  BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
+  //BSP_LCD_Clear(LCD_COLOR_WHITE);
+  //BSP_LCD_SetBackColor(LCD_COLOR_BLACK);
+  //BSP_LCD_DrawPixel(10, 10, 0xFFFF);
+
+  tft_init();
+
+  //lv_obj_t * label1 = lv_label_create(lv_scr_act(), NULL);
+  //lv_label_set_text(label1, "Hello World");
+
+  lv_obj_t * btn = lv_btn_create(lv_scr_act(), NULL);     /*Add a button the current screen*/
+  lv_obj_set_pos(btn, 10, 10);                            /*Set its position*/
+  lv_obj_set_size(btn, 100, 50);                          /*Set its size*/
+
+  lv_obj_t * label = lv_label_create(btn, NULL);          /*Add a label to the button*/
+  lv_label_set_text(label, "Button");                     /*Set the labels text*/
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -732,6 +748,8 @@ __weak void LVGL_Task(void *argument)
   for(;;)
   {
     osDelay(1);
+    lv_tick_inc(1);
+    lv_task_handler();
   }
   /* USER CODE END 5 */
 }
